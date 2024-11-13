@@ -31,7 +31,6 @@ class Move:
         start_move = time.time()
         subprocess.run(python2_command.split(), stdout=subprocess.PIPE)
         end_move = time.time()
-        # print(process.stdout) # receive output from the python2 script
         print("done in %.2f seconds." % (end_move-start_move), flush=True)
 
 

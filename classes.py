@@ -18,9 +18,15 @@ class Move:
         self.duration=duration
 
     def __len__(self):
+        '''
+        function to return duration of the move just using len
+        '''
         return self.duration
     
     def execute(self, robot_port=9559, robot_ip="127.0.0.1"):
+        '''
+        Function to execute the move on the robot
+        '''
         python2_command = f"python2 ./NaoMoves/{self.name}.py  {robot_ip} {robot_port}"
         start_move = time.time()
         subprocess.run(python2_command.split(), stdout=subprocess.PIPE)

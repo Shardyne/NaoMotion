@@ -144,7 +144,7 @@ def main(robot_ip, port):
 if __name__ == "__main__":
 
     robot_ip = "127.0.0.1"
-    port = 9559  # Insert NAO port
+    port = 44221  # Insert NAO port
     if len(sys.argv) > 2:
         port = int(sys.argv[2])
         robot_ip = sys.argv[1]

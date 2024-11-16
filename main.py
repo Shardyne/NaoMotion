@@ -37,12 +37,6 @@ class NaoMove:
 
 
 def main(robot_ip, port):
-    global motionProxy, ttsProxy
-    motionProxy = ALProxy("ALMotion", robotIP, port)
-    ttsProxy = ALProxy("ALTextToSpeech", robotIP, port)
-    motionProxy = ALProxy("ALMotion", robot_ip, port)
-    ttsProxy = ALProxy("ALTextToSpeech", robot_ip, port)
-
     # TODO: win the challenge :-)
     # The following ones are the moves made available to the robot:
     moves = {'StandUp':       NaoMove(8.35,  {'standing': False}, {'standing': True}),

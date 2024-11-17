@@ -32,25 +32,36 @@ class NaoMove:
 def main(robot_ip, port):
     # TODO: win the challenge :-)
     # The following ones are the moves made available to the robot:
-    moves = {'StandUp':       NaoMove(8.35,  {'standing': False}, {'standing': True}),
-             'AirGuitar':     NaoMove(4.10,   {'standing': True},  {'standing': True}),
-             'ArmDance':      NaoMove(10.42, {'standing': True},  {'standing': True}),
-             'BlowKisses':    NaoMove(4.58,  {'standing': True},  {'standing': True}),
-             'Bow':           NaoMove(3.86,   {'standing': True},  {'standing': True}),
-             'DiagonalRight': NaoMove(2.56,  {'standing': True},  {'standing': True}),
-             'DanceMove':     NaoMove(6.13,  {'standing': True},  {'standing': True}),
-             'SprinklerL':    NaoMove(4.14,   {'standing': True},  {'standing': True}),
-             'SprinklerR':    NaoMove(4.36,  {'standing': True},  {'standing': True}),
-             'RightArm':      NaoMove(9.19,  None, None),
-             'TheRobot':      NaoMove(6.10,   {'standing': True},  {'standing': True}),
-             'ComeOn':        NaoMove(3.62,   {'standing': True},  {'standing': True}),
-             'StayingAlive':  NaoMove(5.90,   {'standing': True},  {'standing': True}),
-             'Rhythm':        NaoMove(2.95,  {'standing': True},  {'standing': True}),
-             'PulpFiction':   NaoMove(5.8,   {'standing': True},  {'standing': True}),
-             'Wave':          NaoMove(3.72,  None, None),
-             'Glory':         NaoMove(3.28,  None, None),
-             'Clap':          NaoMove(4.10,  None, None),
-             'Joy':           NaoMove(4.50,  None, None)}
+    moves = {
+    'StandUp':       NaoMove(8.35,  {'standing': False}, {'standing': True}),
+    'AirGuitar':     NaoMove(4.10,  {'standing': True},  {'standing': True}),
+    'ArmDance':      NaoMove(10.42, {'standing': True},  {'standing': True}),
+    'BlowKisses':    NaoMove(4.58,  {'standing': True},  {'standing': True}),
+    'Bow':           NaoMove(3.86,  {'standing': True},  {'standing': True}),
+    'DiagonalRight': NaoMove(2.56,  {'standing': True},  {'standing': True}),
+    'DanceMove':     NaoMove(6.13,  {'standing': True},  {'standing': True}),
+    'SprinklerL':    NaoMove(4.14,  {'standing': True},  {'standing': True}),
+    'SprinklerR':    NaoMove(4.36,  {'standing': True},  {'standing': True}),
+    'RightArm':      NaoMove(9.19,  None, None),
+    'TheRobot':      NaoMove(6.10,  {'standing': True},  {'standing': True}),
+    'ComeOn':        NaoMove(3.62,  {'standing': True},  {'standing': True}),
+    'StayingAlive':  NaoMove(5.90,  {'standing': True},  {'standing': True}),
+    'Rhythm':        NaoMove(2.95,  {'standing': True},  {'standing': True}),
+    'PulpFiction':   NaoMove(5.80,  {'standing': True},  {'standing': True}),
+    'Wave':          NaoMove(3.72,  None, None),
+    'Glory':         NaoMove(3.28,  None, None),
+    'Clap':          NaoMove(4.10,  None, None),
+    'Joy':           NaoMove(4.50,  None, None),
+    # Mosse aggiunte dalla lista moves non presenti in "moves" iniziale
+    'ArmsOpening':   NaoMove(8.15,  {'standing': True},  {'standing': True}),
+    'DiagonalLeft':  NaoMove(4.17,  {'standing': True},  {'standing': True}),
+    'DoubleMovementGloryJoy': NaoMove(0.07, None, None),  # Mosse che hanno una durata estremamente breve
+    'MoveBackward':  NaoMove(4.79,  {'standing': True},  {'standing': True}),
+    'MoveForward':   NaoMove(3.75,  {'standing': True},  {'standing': True}),
+    'RotationFootLLeg': NaoMove(7.50, {'standing': True},  {'standing': True}),
+    'RotationFootRLeg': NaoMove(7.64, {'standing': True},  {'standing': True}),
+    'Union_arms':    NaoMove(10.31, {'standing': True},  {'standing': True}),
+    }
 
     # The following is the order we chose for the mandatory positions:
     initial_pos = ('M_StandInit',       NaoMove(1.60))

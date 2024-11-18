@@ -15,15 +15,12 @@ class NaoProblem(Problem):
         if state_dict['remaining_time'] < move.duration:
             return False
 
-        # Controlla se le precondizioni del movimento sono rispettate
-        if 'standing' in move.preconditions:
-            if state_dict['standing'] != move.preconditions['standing']:
-                return False
-
         # Controlla che il movimento non sia identico all'ultimo eseguito
-        last_move = state_dict['choreography'][-1]
-        if move_name == last_move:
+        last_move = state_dict['choreography'][-4:]
+        if move_name in self.previous_moves_done or move_name in last_move:
             return False
+
+        
 
         return True
 
@@ -42,7 +39,7 @@ class NaoProblem(Problem):
         new_standing = nao_move.postconditions.get('standing', state_dict['standing'])
 
         return (('choreography', (*state_dict['choreography'], action)),
-                ('standing', new_standing),
+                ('standing', state_dict['standing']),
                 ('remaining_time', state_dict['remaining_time'] - nao_move.duration),
                 ('moves_done', state_dict['moves_done'] + 1))
 
@@ -57,9 +54,4 @@ class NaoProblem(Problem):
         # Verifica i vincoli del goal
         time_constraint = (a <= state_dict['remaining_time'] <= b)
         moves_done_constraint = (state_dict['moves_done'] >= goal_dict['moves_done'])
-        standing_constraint = (state_dict['standing'] == goal_dict['standing'])
-
-        if goal_dict['standing'] is None:
-            return time_constraint and moves_done_constraint
-        else:
-            return time_constraint and moves_done_constraint and standing_constraint
+        return time_constraint and moves_done_constraint

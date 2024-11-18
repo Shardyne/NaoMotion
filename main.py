@@ -33,43 +33,40 @@ def main(robot_ip, port):
     # TODO: win the challenge :-)
     # The following ones are the moves made available to the robot:
     moves = {
-        'StandUp':       NaoMove(8.35,  {'standing': False}, {'standing': True}),
         'AirGuitar':     NaoMove(4.10,  {'standing': True},  {'standing': True}),
         'ArmDance':      NaoMove(10.42, {'standing': True},  {'standing': True}),
         'BlowKisses':    NaoMove(4.58,  {'standing': True},  {'standing': True}),
         'Bow':           NaoMove(3.86,  {'standing': True},  {'standing': True}),
         'DiagonalRight': NaoMove(2.56,  {'standing': True},  {'standing': True}),
-        'DanceMove':     NaoMove(6.13,  {'standing': True},  {'standing': True}),
-        'SprinklerL':    NaoMove(4.14,  {'standing': True},  {'standing': True}),
+        'DanceMove':     NaoMove(7.3,  {'standing': True},  {'standing': True}),
+        'SprinklerL':    NaoMove(4.6,  {'standing': True},  {'standing': True}),
         'SprinklerR':    NaoMove(4.36,  {'standing': True},  {'standing': True}),
         'RightArm':      NaoMove(9.19,  None, None),
-        'TheRobot':      NaoMove(6.10,  {'standing': True},  {'standing': True}),
+        'TheRobot':      NaoMove(7,  {'standing': True},  {'standing': True}),
         'ComeOn':        NaoMove(3.62,  {'standing': True},  {'standing': True}),
         'StayingAlive':  NaoMove(5.90,  {'standing': True},  {'standing': True}),
         'Rhythm':        NaoMove(2.95,  {'standing': True},  {'standing': True}),
         'PulpFiction':   NaoMove(5.80,  {'standing': True},  {'standing': True}),
         'Wave':          NaoMove(3.72,  None, None),
-        'Glory':         NaoMove(3.28,  None, None),
         'Clap':          NaoMove(4.10,  None, None),
-        'Joy':           NaoMove(4.50,  None, None),
         # Mosse aggiunte dalla lista moves non presenti in "moves" iniziale
         'ArmsOpening':   NaoMove(8.15,  {'standing': True},  {'standing': True}),
         'DiagonalLeft':  NaoMove(4.17,  {'standing': True},  {'standing': True}),
-        'DoubleMovementGloryJoy': NaoMove(0.07, None, None),  # Mosse che hanno una durata estremamente breve
-        'MoveBackward':  NaoMove(4.79,  {'standing': True},  {'standing': True}),
-        'MoveForward':   NaoMove(3.75,  {'standing': True},  {'standing': True}),
-        'RotationFootLLeg': NaoMove(7.50, {'standing': True},  {'standing': True}),
-        'RotationFootRLeg': NaoMove(7.64, {'standing': True},  {'standing': True}),
-        'Union_arms':    NaoMove(10.31, {'standing': True},  {'standing': True}),
+        'DoubleMovement': NaoMove(6.76),
+        'Glory': NaoMove(3.90), 
+        'Joy': NaoMove(5.19), # Mosse che hanno una durata estremamente breve
+        'MoveBackward':  NaoMove(4.79),
+        'MoveForward':   NaoMove(3.75),
+        'RotationFootLLeg': NaoMove(7.50),
+        'Union_arms':    NaoMove(10.31),
     }
-
     # The following is the order we chose for the mandatory positions:
-    initial_pos = ('M_StandInit',       NaoMove(1.60))
-    mandatory_pos = [('M_WipeForehead', NaoMove(4.48)),
-                     ('M_Stand',        NaoMove(2.32)),
-                     ('M_Hello',        NaoMove(4.34)),
-                     ('M_Sit',          NaoMove(9.84)),
-                     ('M_SitRelax',     NaoMove(3.92)),
+    initial_pos = ('M_StandInit',       NaoMove(2.1))
+    mandatory_pos = [('M_WipeForehead', NaoMove(5.48)),
+                     ('M_Stand',        NaoMove(2.82)),
+                     ('M_Hello',        NaoMove(5.19)),
+                     ('M_Sit',          NaoMove(11.57)),
+                     ('M_SitRelax',     NaoMove(15.62)),
                      ('M_StandZero',    NaoMove(1.4))]
     final_goal_pos = ('M_Crouch',       NaoMove(1.32))
     pos_list = [initial_pos, *mandatory_pos, final_goal_pos]
@@ -110,7 +107,7 @@ def main(robot_ip, port):
         choreography = (starting_pos[0],)  # Initial choreography
         initial_standing = postcondition_standing(starting_pos[0])
         goal_standing = precondition_standing(ending_pos[0])
-        remaining_time = 180.0 / number_of_steps - mean_time_lost_because_of_mandatory_positions
+        remaining_time = 110.0 / number_of_steps - mean_time_lost_because_of_mandatory_positions
 
         cur_state = (('choreography', choreography),
                      ('standing', initial_standing),
@@ -119,7 +116,7 @@ def main(robot_ip, port):
 
         cur_goal_state = (('standing', goal_standing),
                           ('remaining_time', 0),  # About this amount of time left
-                          ('moves_done', 3))
+                          ('moves_done', 2))
 
         cur_problem = NaoProblem(cur_state, cur_goal_state, moves, 1, solution)
         cur_solution = iterative_deepening_search(cur_problem)
@@ -145,7 +142,7 @@ def main(robot_ip, port):
     state_dict = from_state_to_dict(cur_solution.state)
     print("\nSTATISTICS:")
     print(f"Time required by the planning phase: %.2f seconds." % (end_planning-start_planning))
-    print(f"Estimated choreography duration: {180.0 - state_dict['remaining_time']}")
+    print(f"Estimated choreography duration: {110 - state_dict['remaining_time']}")
     print("-------------------------------------------------------")
     
     # Dance execution

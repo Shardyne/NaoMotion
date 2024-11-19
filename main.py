@@ -147,7 +147,7 @@ def main(robot_ip, port):
     
     # Dance execution
     print("\nDANCE EXECUTION:")
-    play_song("Don't stop me now - Queen.mp3")
+    play_song("Daft Punk - Something About Us.mp3")
     start_dance = time.time()
     do_moves(solution, robot_ip, port)
     end_dance = time.time()

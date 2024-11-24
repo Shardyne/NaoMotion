@@ -9,6 +9,14 @@ def main(robotIP, port):
 	times = list()
 	keys = list()
 
+	try:
+		postureProxy = ALProxy("ALRobotPosture", robotIP, port)
+	except Exception, e:
+		print "Could not create proxy to ALRobotPosture"
+		print "Error was:", e
+	
+	postureProxy.goToPosture("StandInit",10.0)
+
 	names.append("HeadPitch")
 	times.append([0.225, 3.05, 3.325, 4])
 	keys.append([[-0.233874, [3, -0.075, 0], [3, 0.941667, 0]], [-0.173384, [3, -0.941667, 0], [3, 0.0916667, 0]], [-0.173384, [3, -0.0916667, 0], [3, 0.225, 0]], [-0.00540675, [3, -0.225, 0], [3, 0, 0]]])

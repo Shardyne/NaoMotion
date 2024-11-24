@@ -25,7 +25,7 @@ class NaoMove:
     def get(self):
         return 'NaoMove('+str(self.duration)+','+str(self.preconditions)+','+str(self.postconditions)+')'
 
-class Move:
+class Moves:
     def __init__(self, name):
         '''
         Create a class to define the moves using the name and its duration 
@@ -35,17 +35,14 @@ class Move:
    
     def execute(self, robot_port=9559, robot_ip="127.0.0.1"):
         python2_command = f"python2 ./NaoMoves/{self.name}.py  {robot_ip} {robot_port}"
-        start_move = time.time()
         subprocess.run(python2_command.split(), stdout=subprocess.PIPE)
-        end_move = time.time()
         # print(process.stdout) # receive output from the python2 script
-        print("done in %.2f seconds." % (end_move-start_move), flush=True)
-    end=time.time()
 
 def exec_dur(move):
     start=time.time()
     move.execute()
     end=time.time()
+    print(round(end-start,2))
     return round(end-start,2)
     
 moves=['AirGuitar', 'ArmDance', 'ArmsOpening', 'M_Sit','BlowKisses', 'Bow', 'Clap', 'ComeOn', 'DanceMove', 
@@ -55,7 +52,3 @@ moves=['AirGuitar', 'ArmDance', 'ArmsOpening', 'M_Sit','BlowKisses', 'Bow', 'Cla
         'MoveBackward', 'MoveForward', 'PulpFiction', 'Rhythm', 'RightArm', 
         'RotationFootLLeg',  'M_StandInit', 'RotationFootRLeg', 'SprinklerL', 'SprinklerR',
           'StandUp', 'StayingAlive', 'TheRobot', 'Union_arms', 'Wave']
-
-Move('Wave').execute()
-
-Move('newmove').execute()

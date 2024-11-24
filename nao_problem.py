@@ -35,11 +35,7 @@ class NaoProblem(Problem):
         nao_move = self.available_moves[action]
         state_dict = from_state_to_dict(state)
 
-        # Aggiorna lo stato con il nuovo movimento
-        new_standing = nao_move.postconditions.get('standing', state_dict['standing'])
-
         return (('choreography', (*state_dict['choreography'], action)),
-                ('standing', state_dict['standing']),
                 ('remaining_time', state_dict['remaining_time'] - nao_move.duration),
                 ('moves_done', state_dict['moves_done'] + 1))
 

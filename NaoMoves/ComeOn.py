@@ -8,7 +8,6 @@ def main(robotIP, port):
 	names = list()
 	times = list()
 	keys = list()
-
 	names.append("HeadPitch")
 	times.append([3.5])
 	keys.append([[-0.000487671, [3, -1.16667, 0], [3, 0, 0]]])

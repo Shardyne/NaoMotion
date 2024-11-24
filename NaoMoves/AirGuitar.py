@@ -16,9 +16,8 @@ def main(robotIP, port):
 	except Exception,e:
 		print("Could not create a proxy to ALTextToSpeech")
 	
+	
 	# ttsProxy.say("Hey check out my guitar skills!")
-
-		
 	names.append("LAnklePitch")
 	times.append([0.433333, 4])
 	keys.append([[-0.359129, [3, -0.144444, 0], [3, 1.18889, 0]], [-0.104485, [3, -1.18889, 0], [3, 0, 0]]])

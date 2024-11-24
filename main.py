@@ -5,68 +5,58 @@ from aima.search import *
 from nao_problem import NaoProblem
 from utils import *
 
-# Funzione per verificare le condizioni iniziali della posizione "standing"
-def precondition_standing(position):
-    return position != 'M_SitRelax'
-
-# Funzione per verificare le condizioni finali della posizione "standing"
-def postcondition_standing(position):
-    return position not in ('M_Sit', 'M_SitRelax')
-
-class NaoMove:
+class Move:
     """
     Questa classe definisce le informazioni relative
     a una particolare mossa.
     """
-    def __init__(self, duration=None, preconditions=None, postconditions=None):
+    def __init__(self, duration=None):
         self.duration = duration
-        self.preconditions = preconditions if preconditions is not None else {}
-        self.postconditions = postconditions if postconditions is not None else {}
 
 def main(robot_ip, port):
     # Lista delle mosse disponibili per il robot
     moves = {
-        'AirGuitar': NaoMove(4.10, {'standing': True}, {'standing': True}),
-        'Finger': NaoMove(4.10, {'standing': True}, {'standing': True}),
-        'DanceTwist': NaoMove(4.10, {'standing': True}, {'standing': True}),
-        'Handup': NaoMove(4.10, {'standing': True}, {'standing': True}),
-        'ArmDance': NaoMove(10.42, {'standing': True}, {'standing': True}),
-        'BlowKisses': NaoMove(4.58, {'standing': True}, {'standing': True}),
-        'Bow': NaoMove(3.86, {'standing': True}, {'standing': True}),
-        'DiagonalRight': NaoMove(2.56, {'standing': True}, {'standing': True}),
-        'DanceMove': NaoMove(7.3, {'standing': True}, {'standing': True}),
-        'SprinklerL': NaoMove(4.6, {'standing': True}, {'standing': True}),
-        'SprinklerR': NaoMove(4.36, {'standing': True}, {'standing': True}),
-        'RightArm': NaoMove(9.19, None, None),
-        'TheRobot': NaoMove(7, {'standing': True}, {'standing': True}),
-        'ComeOn': NaoMove(3.62, {'standing': True}, {'standing': True}),
-        'StayingAlive': NaoMove(5.90, {'standing': True}, {'standing': True}),
-        'Rhythm': NaoMove(2.95, {'standing': True}, {'standing': True}),
-        'PulpFiction': NaoMove(5.80, {'standing': True}, {'standing': True}),
-        'Wave': NaoMove(3.72, None, None),
-        'Clap': NaoMove(4.10, None, None),
-        'ArmsOpening': NaoMove(8.15, {'standing': True}, {'standing': True}),
-        'DiagonalLeft': NaoMove(4.17, {'standing': True}, {'standing': True}),
-        'DoubleMovement': NaoMove(6.76),
-        'Glory': NaoMove(3.90),
-        'Joy': NaoMove(5.19),
-        'MoveBackward': NaoMove(4.79),
-        'MoveForward': NaoMove(3.75),
-        'RotationFootLLeg': NaoMove(7.50),
-        'Union_arms': NaoMove(10.31),
+        'AirGuitar': Move(4.10),
+        'Finger': Move(13),
+        'DanceTwist': Move(6.49),
+        'Handup': Move(10.73),
+        'ArmDance': Move(10.42),
+        'BlowKisses': Move(4.58),
+        'Bow': Move(3.86),
+        'DiagonalRight': Move(2.56),
+        'DanceMove': Move(7.3),
+        'SprinklerL': Move(4.6),
+        'SprinklerR': Move(4.36),
+        'RightArm': Move(9.19),
+        'TheRobot': Move(7),
+        'ComeOn': Move(3.62),
+        'StayingAlive': Move(6.90),
+        'Rhythm': Move(2.95),
+        'PulpFiction': Move(5.80),
+        'Wave': Move(3.72),
+        'Clap': Move(4.73),
+        'ArmsOpening': Move(8.15),
+        'DiagonalLeft': Move(4.17),
+        'DoubleMovement': Move(6.76),
+        'Glory': Move(3.90),
+        'Joy': Move(5.19),
+        'MoveBackward': Move(4.79),
+        'MoveForward': Move(3.75),
+        'RotationFootLLeg': Move(7.50),
+        'Union_arms': Move(10.31),
     }
 
     # Posizioni iniziali, obbligatorie e finali
-    initial_pos = ('M_StandInit', NaoMove(2.1))
+    initial_pos = ('M_StandInit', Move(2.1))
     mandatory_pos = [
-        ('M_WipeForehead', NaoMove(5.48)),
-        ('M_Stand', NaoMove(2.82)),
-        ('M_Hello', NaoMove(5.19)),
-        ('M_Sit', NaoMove(11.57)),
-        ('M_SitRelax', NaoMove(15.62)),
-        ('M_StandZero', NaoMove(1.4))
+        ('M_WipeForehead', Move(5.48)),
+        ('M_Stand', Move(2.82)),
+        ('M_Hello', Move(5.19)),
+        ('M_Sit', Move(12.1)),
+        ('M_SitRelax', Move(17.26)),
+        ('M_StandZero', Move(1.4))
     ]
-    final_goal_pos = ('M_Crouch', NaoMove(1.32))
+    final_goal_pos = ('M_Crouch', Move(1.32))
 
     pos_list = [initial_pos, *mandatory_pos, final_goal_pos]
     number_of_steps = len(pos_list) - 1
@@ -91,25 +81,22 @@ def main(robot_ip, port):
         starting_pos = pos_list[index - 1]
         ending_pos = pos_list[index]
 
+
         if ending_pos[0] in executed_moves:
             print(f"Skipping move {ending_pos[0]} as it was already executed.")
             print(f"Moves executed so far: {executed_moves}")
             continue  # Salta la mossa che è già stata eseguita
 
         choreography = (starting_pos[0],)  # Coreografia iniziale
-        initial_standing = postcondition_standing(starting_pos[0])
-        goal_standing = precondition_standing(ending_pos[0])
         remaining_time = 110.0 / number_of_steps - mean_time_lost_because_of_mandatory_positions
 
         cur_state = (
             ('choreography', choreography),
-            ('standing', initial_standing),
             ('remaining_time', remaining_time),
             ('moves_done', 0)
         )
 
         cur_goal_state = (
-            ('standing', goal_standing),
             ('remaining_time', 0),
             ('moves_done', 2)
         )
@@ -140,7 +127,7 @@ def main(robot_ip, port):
     print("\nINFO:")
     print(f"Time required for the planning : %.2f seconds." % (end_planning - start_planning))
     print(f"Estimated choreography duration time: {110 - state_dict['remaining_time']}")
-    print("-------------------------------------------------------")
+    print("-"*20)
     
     # Esecuzione della danza
     print("\nRunning...")

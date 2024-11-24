@@ -56,4 +56,6 @@ moves=['AirGuitar', 'ArmDance', 'ArmsOpening', 'M_Sit','BlowKisses', 'Bow', 'Cla
         'RotationFootLLeg',  'M_StandInit', 'RotationFootRLeg', 'SprinklerL', 'SprinklerR',
           'StandUp', 'StayingAlive', 'TheRobot', 'Union_arms', 'Wave']
 
-Move('Joy').execute()
+Move('Wave').execute()
+
+Move('newmove').execute()

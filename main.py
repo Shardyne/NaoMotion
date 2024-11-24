@@ -59,7 +59,9 @@ def main(robot_ip, port):
         'MoveForward':   NaoMove(3.75),
         'RotationFootLLeg': NaoMove(7.50),
         'Union_arms':    NaoMove(10.31),
+        'Workout': NaoMove(12.55)
     }
+
     # The following is the order we chose for the mandatory positions:
     initial_pos = ('M_StandInit',       NaoMove(2.1))
     mandatory_pos = [('M_WipeForehead', NaoMove(5.48)),
@@ -117,6 +119,9 @@ def main(robot_ip, port):
         cur_goal_state = (('standing', goal_standing),
                           ('remaining_time', 0),  # About this amount of time left
                           ('moves_done', 2))
+        keys=list(moves.items())
+        random.shuffle(keys)
+        moves=dict(keys)
 
         cur_problem = NaoProblem(cur_state, cur_goal_state, moves, 1, solution)
         cur_solution = iterative_deepening_search(cur_problem)

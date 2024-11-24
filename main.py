@@ -54,7 +54,6 @@ def main(robot_ip, port):
         'MoveForward': NaoMove(3.75),
         'RotationFootLLeg': NaoMove(7.50),
         'Union_arms': NaoMove(10.31),
-        'Workout': NaoMove(12.55)
     }
 
     # Posizioni iniziali, obbligatorie e finali

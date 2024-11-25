@@ -4,6 +4,7 @@
 from aima.search import *
 from nao_problem import NaoProblem
 from utils import *
+import time
 
 class Move:
     """
@@ -12,12 +13,14 @@ class Move:
     """
     def __init__(self, duration=None):
         self.duration = duration
+    
+    def get(self):
+        return self.duration
 
 def main(robot_ip, port):
     # Lista delle mosse disponibili per il robot
     moves = {
         'AirGuitar': Move(4.10),
-        'Finger': Move(13),
         'DanceTwist': Move(6.49),
         'Handup': Move(10.73),
         'ArmDance': Move(10.42),
@@ -32,6 +35,7 @@ def main(robot_ip, port):
         'ComeOn': Move(3.62),
         'StayingAlive': Move(6.90),
         'Rhythm': Move(2.95),
+        'Finger': Move(13),
         'PulpFiction': Move(5.80),
         'Wave': Move(3.72),
         'Clap': Move(4.73),
@@ -45,6 +49,7 @@ def main(robot_ip, port):
         'RotationFootLLeg': Move(7.50),
         'Union_arms': Move(10.31),
     }
+    
 
     # Posizioni iniziali, obbligatorie e finali
     initial_pos = ('M_StandInit', Move(2.1))
@@ -108,27 +113,49 @@ def main(robot_ip, port):
         cur_problem = NaoProblem(cur_state, cur_goal_state, moves, 1, solution)
         cur_solution = iterative_deepening_search(cur_problem)
 
-        if cur_solution is None:
-            raise RuntimeError(f'Step {index} - no solution was found!')
-
-        cur_solution_dict = from_state_to_dict(cur_solution.state)
-        cur_choreography = cur_solution_dict['choreography']
-        print(f"Step {index}: \t" + ", ".join(cur_choreography))
-        solution += cur_choreography
-
-        # Aggiungi la mossa corrente alla lista delle mosse eseguite
-        executed_moves.extend(cur_choreography)
-        moves = {move: details for move, details in moves.items() if move not in executed_moves}
+        try:
+            if cur_solution is None:
+                raise RuntimeError(f'Step {index} - no solution was found!')
+            cur_solution_dict = from_state_to_dict(cur_solution.state)
+            cur_choreography = cur_solution_dict['choreography']
+            print(f"Step {index}: \t" + ", ".join(cur_choreography))
+            solution += cur_choreography
+            # Aggiungi la mossa corrente alla lista delle mosse eseguite
+            executed_moves.extend(cur_choreography)
+            moves = {move: details for move, details in moves.items() if move not in executed_moves}
+        except:
+            print(f'Step {index}: solving just using the intermediate compulsory positions')
+            for dance in pos_list[abs(index-2):-1]:
+                solution+=(dance[0],)
+            break
+            
 
     # Fase di conclusione della pianificazione
     end_planning = time.time()
     solution += (final_goal_pos[0],)
-    state_dict = from_state_to_dict(cur_solution.state)
-    print("\nINFO:")
-    print(f"Time required for the planning : %.2f seconds." % (end_planning - start_planning))
-    print(f"Estimated choreography duration time: {110 - state_dict['remaining_time']}")
-    print("-"*20)
-    
+    try:
+        state_dict = from_state_to_dict(cur_solution.state)
+        print("\nINFO:")
+        print(f"Time required for the planning : %.2f seconds." % (end_planning - start_planning))
+        print(f"Estimated choreography duration time: {110 - state_dict['remaining_time']}")
+        print("-"*20)
+    except AttributeError:
+        times=sum(pos[1].duration for pos in pos_list)
+        i=0
+        while i<len(solution):
+            try:
+                times+=moves[dance].duration
+                i+=1
+            except KeyError:
+                i+=1
+
+                
+
+        print("\nINFO:")
+        print(f"Time required for the planning : %.2f seconds." % (end_planning - start_planning))
+        print(f"Estimated choreography duration time: {times}")
+        print("-"*20)
+
     # Esecuzione della danza
     print("\nRunning...")
     play_song("Daft Punk - Something About Us.mp3")

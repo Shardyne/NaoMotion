@@ -7,19 +7,15 @@ from utils import *
 import time
 
 class Move:
-    """
-    Questa classe definisce le informazioni relative
-    a una particolare mossa.
-    """
-    def __init__(self, duration=None):
-        self.duration = duration
+    def __init__(self, Moveduration=None):
+        self.Moveduration = Moveduration
     
     def get(self):
-        return self.duration
+        return self.Moveduration
 
 def main(robot_ip, port):
-    # Lista delle mosse disponibili per il robot
-    moves = {
+    # Lista delle mosse utilizzate
+    PossibleMoves = {
         'AirGuitar': Move(4.10),
         'DanceTwist': Move(6.49),
         'Handup': Move(10.73),
@@ -50,10 +46,13 @@ def main(robot_ip, port):
         'Union_arms': Move(10.31),
     }
     
+    
+    # Lista per tracciare le mosse già eseguite
+    executed_moves = []
 
     # Posizioni iniziali, obbligatorie e finali
-    initial_pos = ('M_StandInit', Move(2.1))
-    mandatory_pos = [
+    starting_position = ('M_StandInit', Move(2.1))
+    mandatory_position = [
         ('M_WipeForehead', Move(5.48)),
         ('M_Stand', Move(2.82)),
         ('M_Hello', Move(5.19)),
@@ -61,23 +60,21 @@ def main(robot_ip, port):
         ('M_SitRelax', Move(17.26)),
         ('M_StandZero', Move(1.4))
     ]
-    final_goal_pos = ('M_Crouch', Move(1.32))
+    final_position = ('M_Crouch', Move(1.32))
 
-    pos_list = [initial_pos, *mandatory_pos, final_goal_pos]
+    pos_list = [starting_position, *mandatory_position, final_position]
     number_of_steps = len(pos_list) - 1
 
-    # Lista per tracciare le mosse già eseguite
-    executed_moves = []
 
     # Calcolare il tempo totale per le mosse obbligatorie
-    total_time = sum(pos[1].duration for pos in pos_list)
+    total_time = sum(pos[1].Moveduration for pos in pos_list)
 
-    # Consideriamo il tempo totale come distribuito uniformemente su ciascun passo
-    mean_time_lost_because_of_mandatory_positions = total_time / number_of_steps
+    # Tempo totale per eseguire la mossa iniziale, le mosse mandatory e la mossa finale
+    mandatory_time = total_time / number_of_steps
 
     # Fase di pianificazione
-    solution = tuple()
     print("PLANNED CHOREOGRAPHY:")
+    solution = tuple()
     start_planning = time.time()
     last_move = None
 
@@ -93,7 +90,7 @@ def main(robot_ip, port):
             continue  # Salta la mossa che è già stata eseguita
 
         choreography = (starting_pos[0],)  # Coreografia iniziale
-        remaining_time = 110.0 / number_of_steps - mean_time_lost_because_of_mandatory_positions
+        remaining_time = 110.0 / number_of_steps - mandatory_time
 
         cur_state = (
             ('choreography', choreography),
@@ -106,11 +103,11 @@ def main(robot_ip, port):
             ('moves_done', 2)
         )
 
-        keys = list(moves.items())
+        keys = list(PossibleMoves.items())
         random.shuffle(keys)
-        moves = dict(keys)
+        PossibleMoves = dict(keys)
 
-        cur_problem = NaoProblem(cur_state, cur_goal_state, moves, 1, solution)
+        cur_problem = NaoProblem(cur_state, cur_goal_state, PossibleMoves, 1, solution)
         cur_solution = iterative_deepening_search(cur_problem)
 
         try:
@@ -122,7 +119,7 @@ def main(robot_ip, port):
             solution += cur_choreography
             # Aggiungi la mossa corrente alla lista delle mosse eseguite
             executed_moves.extend(cur_choreography)
-            moves = {move: details for move, details in moves.items() if move not in executed_moves}
+            PossibleMoves = {move: details for move, details in PossibleMoves.items() if move not in executed_moves}
         except:
             print(f'Step {index}: solving just using the intermediate compulsory positions')
             for dance in pos_list[abs(index-2):-1]:
@@ -132,7 +129,7 @@ def main(robot_ip, port):
 
     # Fase di conclusione della pianificazione
     end_planning = time.time()
-    solution += (final_goal_pos[0],)
+    solution += (final_position[0],)
     try:
         state_dict = from_state_to_dict(cur_solution.state)
         print("\nINFO:")
@@ -140,11 +137,11 @@ def main(robot_ip, port):
         print(f"Estimated choreography duration time: {110 - state_dict['remaining_time']}")
         print("-"*20)
     except AttributeError:
-        times=sum(pos[1].duration for pos in pos_list)
+        times=sum(pos[1].Moveduration for pos in pos_list)
         i=0
         while i<len(solution):
             try:
-                times+=moves[dance].duration
+                times+=PossibleMoves[dance].Moveduration
                 i+=1
             except KeyError:
                 i+=1

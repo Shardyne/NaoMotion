@@ -12,7 +12,7 @@ class NaoProblem(Problem):
         state_dict = from_state_to_dict(state)
 
         # Controlla se il tempo rimanente è sufficiente
-        if state_dict['remaining_time'] < move.duration:
+        if state_dict['remaining_time'] < move.Moveduration:
             return False
 
         # Controlla che il movimento non sia identico all'ultimo eseguito
@@ -36,7 +36,7 @@ class NaoProblem(Problem):
         state_dict = from_state_to_dict(state)
 
         return (('choreography', (*state_dict['choreography'], action)),
-                ('remaining_time', state_dict['remaining_time'] - nao_move.duration),
+                ('remaining_time', state_dict['remaining_time'] - nao_move.Moveduration),
                 ('moves_done', state_dict['moves_done'] + 1))
 
     def goal_test(self, state):

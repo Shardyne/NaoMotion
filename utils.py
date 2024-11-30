@@ -30,10 +30,7 @@ def do_moves(moves, robot_ip, robot_port):
 def from_state_to_dict(state):
     """
     Converts a state into a dictionary for easier access to the key-value pairs.
-    Please note: in case of repeated properties, only the last value is kept!
 
-    :param state: a problem state in the form of tuple of tuples
-    :return: a dictionary representation of the given state
     """
     params_dict = dict()
     for t in state:

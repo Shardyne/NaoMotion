@@ -13,6 +13,7 @@ class Move:
     def get(self):
         return self.Moveduration
 
+# Dizionario delle mosse disponibili con la relativa durata, utilizzato nel calcolo della durata prevista della coreografia
 PossibleMovesx = {
         'AirGuitar': Move(4.10),
         'DanceTwist': Move(6.49),
@@ -45,7 +46,7 @@ PossibleMovesx = {
     }
 
 def main(robot_ip, port):
-    # Dizionario delle mosse disponibili con la relativa durata
+    # Dizionario delle mosse disponibili con la relativa durata, utilizzato nella pianificazione
     PossibleMoves = {
         'AirGuitar': Move(4.10),
         'DanceTwist': Move(6.49),

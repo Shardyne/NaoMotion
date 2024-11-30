@@ -20,11 +20,14 @@ Steps for testing the project on the terminal:
 
 - pip install python-vlc
 
+------------------------------------------------------------------------------------
+( if you haven't done it yet)
+
 - download python 2.7 - 32 bits 
 
 - install the naoqi sdk (to do it follow this guide: http://doc.aldebaran.com/2-5/dev/python/install_guide.html)
-
-- cd NaoMotion
+------------------------------------------------------------------------------------
+- pip install numpy
 
 - python3 main.py localhost nport
 

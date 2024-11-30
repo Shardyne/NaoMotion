@@ -12,6 +12,8 @@ Steps for testing the project on the terminal:
 
 - git clone https://github.com/Shardyne/NaoMotion.git
 
+- cd NaoMotion
+
 - python3 -m venv venv
 
 - . venv/bin/activate

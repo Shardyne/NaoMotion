@@ -64,4 +64,3 @@ if __name__ == "__main__":
 	main(robotIP, port)
 	end = time.time()
 	print ("%.2f seconds elapsed" % (end-start))
-

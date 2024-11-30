@@ -13,6 +13,37 @@ class Move:
     def get(self):
         return self.Moveduration
 
+PossibleMovesx = {
+        'AirGuitar': Move(4.10),
+        'DanceTwist': Move(6.49),
+        'Handup': Move(10.73),
+        'ArmDance': Move(10.42),
+        'BlowKisses': Move(4.58),
+        'Bow': Move(3.86),
+        'DiagonalRight': Move(2.56),
+        'DanceMove': Move(7.3),
+        'SprinklerL': Move(4.6),
+        'SprinklerR': Move(4.36),
+        'RightArm': Move(9.19),
+        'TheRobot': Move(7),
+        'ComeOn': Move(3.62),
+        'StayingAlive': Move(6.90),
+        'Rhythm': Move(2.95),
+        'Finger': Move(13),
+        'PulpFiction': Move(5.80),
+        'Wave': Move(3.72),
+        'Clap': Move(4.73),
+        'ArmsOpening': Move(8.15),
+        'DiagonalLeft': Move(4.17),
+        'DoubleMovement': Move(6.76),
+        'Glory': Move(3.90),
+        'Joy': Move(5.19),
+        'MoveBackward': Move(4.79),
+        'MoveForward': Move(3.75),
+        'RotationFootLLeg': Move(7.50),
+        'Union_arms': Move(10.31),
+    }
+
 def main(robot_ip, port):
     # Dizionario delle mosse disponibili con la relativa durata
     PossibleMoves = {
@@ -109,7 +140,7 @@ def main(robot_ip, port):
 
         try:
             if nao_solution is None:
-                raise RuntimeError(f'Step {index} - no solution was found!')
+                raise RuntimeError
             solution_state_dict = from_state_to_dict(nao_solution.state)
             current_choreography = solution_state_dict['choreography']
             print(f"Step {index}: \t" + ", ".join(current_choreography))
@@ -118,7 +149,7 @@ def main(robot_ip, port):
             PossibleMoves = {move: details for move, details in PossibleMoves.items() if move not in executed_moves}
         except:
             print(f'Step {index}: solving using intermediate compulsory positions')
-            for dance in choreography_positions[abs(index - 2):-1]:
+            for dance in choreography_positions[abs(index-1):7]:
                 choreography_solution += (dance[0],)
             break
             
@@ -132,7 +163,10 @@ def main(robot_ip, port):
         print(f"Estimated choreography duration time: {110 - state_dict['remaining_time']}")
         print("-" * 20)
     except AttributeError:
-        total_duration = sum(pos[1].Moveduration for pos in choreography_positions)
+        total_duration=sum(pos[1].Moveduration for pos in choreography_positions)
+        for pos in choreography_solution:
+                if pos in PossibleMovesx:
+                    total_duration+=PossibleMovesx[pos].Moveduration
         print("\nINFO:")
         print(f"Time required for the planning : %.2f seconds." % (planning_end_time - planning_start_time))
         print(f"Estimated choreography duration time: {total_duration}")
@@ -145,6 +179,7 @@ def main(robot_ip, port):
     do_moves(choreography_solution, robot_ip, port)
     dance_end_time = time.time()
     print(f"Real choreography duration time: %.2f seconds." % (dance_end_time - dance_start_time))
+    time.sleep(10)
 
 if __name__ == "__main__":
     robot_ip = "127.0.0.1"
